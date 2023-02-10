@@ -6,7 +6,10 @@ import React, {
 	useRef,
 	useState,
 } from "react";
-import type { IUsersResponseType } from "../../../types/users.response.type";
+import type {
+	IResult,
+	IUsersResponseType,
+} from "../../../types/users.response.type";
 import { Loader } from "../Loader/Loader";
 import { UserItem } from "./UserItem";
 import axios from "axios";
@@ -72,20 +75,23 @@ export const UsersContainer: FC = (): JSX.Element => {
 		}
 	}, [lastElement]);
 
+	const renderUsersList = (users: IResult[]) => {
+		const content = [];
+		for (let i = 0; i < users.length; i++) {
+			const user = users[i];
+			if (i + 1 === users.length) {
+				content.push(
+					<UserItem key={JSON.stringify(user)} obj={user} ref={lastElement} />
+				);
+			}
+			content.push(<UserItem key={JSON.stringify(user)} obj={user} />);
+		}
+		return content;
+	};
+
 	return (
 		<div className="container">
-			{isLoading ? (
-				<Loader />
-			) : (
-				users?.results.map((obj, index) => {
-					if (index + 1 === users.results.length) {
-						return (
-							<UserItem key={JSON.stringify(obj)} obj={obj} ref={lastElement} />
-						);
-					}
-					return <UserItem key={JSON.stringify(obj)} obj={obj} />;
-				})
-			)}
+			{isLoading ? <Loader /> : renderUsersList(users?.results)}
 		</div>
 	);
 };
