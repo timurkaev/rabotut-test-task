@@ -1,33 +1,91 @@
-import React, { forwardRef, type RefObject } from "react";
-import styles from "./UserContainer.module.css";
-import type { IResult } from "../../../types/users.response.type";
-import { Avatar } from "../../ui/Avatar/Avatar";
-import { Text } from "../../ui/Text/Text";
-
-interface IUsersInterface {
-	obj: IResult;
-	ref: RefObject<HTMLDivElement>;
-}
+import React, {
+	createRef,
+	type FC,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
+import type { IUsersResponseType } from "../../../types/users.response.type";
+import { Loader } from "../Loader/Loader";
+import { UserItem } from "./UserItem";
+import axios from "axios";
 
 // eslint-disable-next-line react/display-name
-export const UsersContainer = forwardRef<HTMLDivElement, IUsersInterface>(
-	({ obj }, ref): JSX.Element => {
-		return (
-			<div className={styles.userContainer}>
-				<div ref={ref} className={styles.userInfo}>
-					<div className={styles.avatarBlock}>
-						<Avatar className={styles.avatar} src={obj?.picture?.medium} />
-						<div className={styles.user}>
-							<Text size="m">
-								{obj?.name?.first} {obj?.name?.last}
-							</Text>
-							<Text size="s">
-								<span>{obj?.gender}</span> <span>{obj?.email}</span>
-							</Text>
-						</div>
-					</div>
-				</div>
-			</div>
-		);
-	}
-);
+export const UsersContainer: FC = (): JSX.Element => {
+	const [users, setUsers] = useState<IUsersResponseType>({
+		results: [],
+		info: {
+			page: 1,
+		},
+	});
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const limit = 20;
+
+	const getRandomUsers = async (): Promise<void> => {
+		try {
+			setIsLoading(true);
+			const res = await axios.get(
+				`https://randomuser.me/api/?results=${limit}&page=${users.info.page}/`
+			);
+			await setUsers((prev) => ({
+				results: [...prev.results, ...res.data.results],
+				info: {
+					page: prev.info.page + 5,
+				},
+			}));
+			setIsLoading(false);
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	useEffect(() => {
+		getRandomUsers();
+	}, []);
+
+	const lastElement = createRef<HTMLDivElement>();
+	const observerLoader = useRef<IntersectionObserver | null>(null);
+
+	const actionInSight = useCallback(
+		(entries: any) => {
+			const target = entries[0];
+			if (target.isIntersecting) {
+				getRandomUsers();
+			}
+		},
+		[lastElement]
+	);
+
+	useEffect(() => {
+		const option = {
+			root: null,
+			rootMargin: "20px",
+			threshold: 0,
+		};
+		if (observerLoader.current) {
+			observerLoader.current.disconnect();
+		}
+		observerLoader.current = new IntersectionObserver(actionInSight, option);
+		if (lastElement.current) {
+			observerLoader.current.observe(lastElement.current);
+		}
+	}, [lastElement]);
+
+	return (
+		<div className="container">
+			{isLoading ? (
+				<Loader />
+			) : (
+				users?.results.map((obj, index) => {
+					if (index + 1 === users.results.length) {
+						return (
+							<UserItem key={JSON.stringify(obj)} obj={obj} ref={lastElement} />
+						);
+					}
+					return <UserItem key={JSON.stringify(obj)} obj={obj} />;
+				})
+			)}
+		</div>
+	);
+};

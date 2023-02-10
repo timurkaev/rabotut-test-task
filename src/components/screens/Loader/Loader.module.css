@@ -1,13 +1,12 @@
 :root {
-	--loading-grey: #ededed;
+	--loading-grey: #e5e5e5;
 }
 
 .loading {
-	margin-top: auto;
+	margin-top: 20px;
 	width: 100%;
-	height: 100%;
+	height: 200px;
 	border-radius: var(--border-radius);
-
 	padding-left: 20px;
 	padding-right: 20px;
 }
@@ -22,7 +21,7 @@
 		var(--loading-grey);
 	background-size: 200% 100%;
 	background-position-x: 180%;
-	animation: 1s loading ease-in-out infinite;
+	animation: 0.5s loading ease-in-out infinite;
 }
 
 @keyframes loading {
