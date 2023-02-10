@@ -1,0 +1,13 @@
+.small {
+	color: var(--color-gray);
+	font-size: 11px;
+}
+
+.medium {
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.text > span:not(:last-child) {
+	margin-right: 30px;
+}
