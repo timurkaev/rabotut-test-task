@@ -22,7 +22,7 @@ export const UserItem = forwardRef<HTMLDivElement, IUsersInterface>(
 								{obj?.name?.first} {obj?.name?.last}
 							</Text>
 							<Text size="s">
-								<span>{obj?.gender}</span> <span>{obj?.email}</span>
+								<span>{obj.login.username}</span> <span>{obj?.gender}</span> <span>{obj?.email}</span>
 							</Text>
 						</div>
 					</div>

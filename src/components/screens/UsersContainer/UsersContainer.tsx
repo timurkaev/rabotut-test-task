@@ -14,7 +14,6 @@ import { Loader } from "../Loader/Loader";
 import { UserItem } from "./UserItem";
 import axios from "axios";
 
-// eslint-disable-next-line react/display-name
 export const UsersContainer: FC = (): JSX.Element => {
 	const [users, setUsers] = useState<IUsersResponseType>({
 		results: [],
@@ -81,10 +80,10 @@ export const UsersContainer: FC = (): JSX.Element => {
 			const user = users[i];
 			if (i + 1 === users.length) {
 				content.push(
-					<UserItem key={JSON.stringify(user)} obj={user} ref={lastElement} />
+					<UserItem key={user.login.uuid} obj={user} ref={lastElement} />
 				);
 			}
-			content.push(<UserItem key={JSON.stringify(user)} obj={user} />);
+			content.push(<UserItem key={i} obj={user} />);
 		}
 		return content;
 	};

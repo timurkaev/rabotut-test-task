@@ -10,11 +10,17 @@ interface IUsersPicture {
 	thumbnail: string;
 }
 
+export interface ILogin {
+	uuid: string
+	username: string
+}
+
 export interface IResult {
 	gender: string;
 	name: IUsersName;
 	email: string;
 	picture: IUsersPicture;
+	login: ILogin
 }
 
 interface IInfo {
