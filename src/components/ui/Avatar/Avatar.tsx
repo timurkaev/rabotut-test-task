@@ -13,6 +13,7 @@ export const Avatar: FC<IAvatarProps> = ({ src, className }): JSX.Element => {
 	return (
 		<div>
 			<img
+				loading="lazy"
 				className={cn(styles.avatar, className)}
 				src={isImage}
 				alt="avatar"

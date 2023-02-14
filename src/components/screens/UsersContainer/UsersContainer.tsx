@@ -14,7 +14,7 @@ import { Loader } from "../Loader/Loader";
 import { UserItem } from "./UserItem";
 import axios from "axios";
 
-export const UsersContainer: FC = (): JSX.Element => {
+const UsersContainer: FC = (): JSX.Element => {
 	const [users, setUsers] = useState<IUsersResponseType>({
 		results: [],
 		info: {
@@ -63,7 +63,7 @@ export const UsersContainer: FC = (): JSX.Element => {
 		const option = {
 			root: null,
 			rootMargin: "20px",
-			threshold: 0,
+			threshold: 1,
 		};
 		if (observerLoader.current) {
 			observerLoader.current.disconnect();
@@ -94,3 +94,5 @@ export const UsersContainer: FC = (): JSX.Element => {
 		</div>
 	);
 };
+
+export default UsersContainer;
